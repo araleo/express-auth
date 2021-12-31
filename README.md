@@ -1,6 +1,6 @@
 # express-auth
 
-This is a reusable JWT based authentication service built using NodeJS + Express. It runs over Docker using a MongoDB container as database.
+This is a reusable JWT authentication service built using NodeJS + Express. It runs over Docker using a MongoDB container as database.
 
 ## Usage
 
@@ -29,4 +29,4 @@ App runs on port 3001.
 
 ## Production
 
-This is not a production ready auth service and needs some adjusments in order to become one. Those are beeing implemented at small paces.
+This is not a production ready auth service and needs some adjusments in order to become one. Those are being implemented at small paces.
