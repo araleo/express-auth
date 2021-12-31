@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+
+  # Auth Service
+  auth:
+    image: auth-image
+    container_name: auth_container
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    environment:
+      - JWT_SECRET
+      - MONGO_AUTH_IP
+      - MONGO_AUTH_PORT
+      - MONGO_AUTH_USER
+      - MONGO_AUTH_PASS
+      - MONGO_AUTH_DB
+    depends_on:
+      - mongo
+    ports:
+      - 3001:3001
+    volumes:
+      - ./auth:/app
+
+  # Database
+  mongo:
+    image: mongo:5.0.5
+    container_name: database_container
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_AUTH_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_AUTH_PASS}
+    volumes:
+      - mongo-db:/data/db
+
+volumes:
+  mongo-db:

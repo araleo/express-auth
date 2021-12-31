@@ -1,0 +1,8 @@
+# Local files
+.env
+
+# Folders
+node_modules
+
+# Editors
+.vscode
