@@ -18,7 +18,7 @@ const getJwt = (email, id, status) => {
 };
 
 const getOneHourAhead = () => {
-  return new Date(Date.now() + 3600000);
+  return new Date(Date.now() + 60 * 60 * 1000);
 };
 
 exports.signup = (req, res, next) => {
@@ -52,7 +52,7 @@ exports.signup = (req, res, next) => {
         .cookie('SESSIONID', token, {
           secure: true,
           expires: expires,
-          // httpOnly: true,
+          httpOnly: true,
         })
         .json({
           message: 'User created',
@@ -96,7 +96,7 @@ exports.login = (req, res, next) => {
         .cookie('SESSIONID', token, {
           secure: true,
           expires: expires,
-          // httpOnly: true,
+          httpOnly: true,
         })
         .json({
           email: loadedUser.email,

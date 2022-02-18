@@ -4,13 +4,14 @@ This is a reusable JWT authentication service built using NodeJS + Express. It r
 
 ## Usage
 
-Users can signup using the `/auth/signup` endpoint and login using `/auth/login`. On successful signups and logins the generated JWT is returned in the response as a Cookie. 
+Users can signup using the `/auth/signup` endpoint and login using `/auth/login`. On successful signups and logins the generated JWT is returned in the response as a Cookie.
 
 ## Environment
 
 This app needs a .env file in it's root with the following format:
 
 ```
+CORS_ORIGIN=<origin address>
 JWT_SECRET=<secret>
 MONGO_AUTH_IP=<docker service name or mongo database IP>
 MONGO_AUTH_PORT=<port number>
@@ -19,7 +20,7 @@ MONGO_AUTH_PASS=<password>
 MONGO_AUTH_DB=<db name>
 ```
 
-## Development
+## Quickstart
 
 ```
 docker-compose up -d --build

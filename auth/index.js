@@ -21,16 +21,18 @@ const mongoUri = `mongodb://${mongoUser}:${mongoPass}@${mongoIp}:${mongoPort}/${
 
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(cors(corsConfig));
+
+if (process.env.ENV === 'dev') {
+  app.use(cors(corsConfig));
+}
 
 app.get('/', (req, res, next) => {
-  res.status(200).json({ message: 'Hello, World' });
+  res.status(200).json({ message: 'Auth' });
 });
 
 app.use('/auth', authRoutes);
 
 app.use((error, req, res, next) => {
-  console.log(error);
   const status = error.statusCode || 500;
   const message = error.message;
   const data = error.data;

@@ -1,5 +1,5 @@
 exports.corsConfig = {
-  origin: 'http://localhost:4200',
+  origin: process.env.CORS_ORIGIN,
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
