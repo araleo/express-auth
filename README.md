@@ -1,10 +1,10 @@
 # express-auth
 
-This is a reusable JWT authentication service built using NodeJS + Express. It runs over Docker using a MongoDB container as database.
+This is a reusable JWT authentication service built using Node + Express and TypeScript. It runs over Docker using MongoDB as a database.
 
 ## Usage
 
-Users can signup using the `/auth/signup` endpoint and login using `/auth/login`. On successful signups and logins the generated JWT is returned in the response as a Cookie.
+Users can signup using the `/auth/signup` endpoint and login using `/auth/login`. On successful signups and logins the generated JWT is returned in the response as a Cookie. There is also a postman collection as example.
 
 ## Environment
 
@@ -13,17 +13,17 @@ This app needs a .env file in it's root with the following format:
 ```
 CORS_ORIGIN=<origin address>
 JWT_SECRET=<secret>
-MONGO_AUTH_IP=<docker service name or mongo database IP>
-MONGO_AUTH_PORT=<port number>
+MONGO_URI=<mongo app uri>
+MONGO_TEST_URI=<mongo test uri>
 MONGO_AUTH_USER=<username>
 MONGO_AUTH_PASS=<password>
-MONGO_AUTH_DB=<db name>
 ```
 
 ## Quickstart
 
 ```
 docker-compose up -d --build
+docker exec -it auth_container npm run test
 ```
 
 App runs on port 3001.
