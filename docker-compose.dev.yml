@@ -8,7 +8,7 @@ services:
     container_name: auth_container
     build:
       context: ./auth
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     environment:
       - JWT_SECRET
       - MONGO_AUTH_IP
@@ -20,6 +20,8 @@ services:
       - mongo
     ports:
       - 3001:3001
+    volumes:
+      - ./auth:/app
 
   # Database
   mongo:
