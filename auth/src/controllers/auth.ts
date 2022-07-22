@@ -47,8 +47,10 @@ export const login: RequestHandler = async (req, res, next) => {
       if (token === undefined) {
         throw new Error('Internal server error');
       }
-      const data = { email: user.email, userId: user._id.toString() };
-      res.status(200).cookie('SESSIONID', token, getCookieCfg()).json(data);
+      res
+        .status(200)
+        .cookie('SESSIONID', token, getCookieCfg())
+        .json({ userId: user._id.toString() });
     })
     .catch((err) => next(err));
 };

@@ -4,8 +4,8 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install --location=global nodemon && npm install
+RUN npm install --location=global nodemon concurrently && npm install
 
 EXPOSE 3001
 
-CMD ["npm", "dev"]
+CMD ["npm", "run", "dev"]

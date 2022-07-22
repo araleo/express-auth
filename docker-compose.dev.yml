@@ -11,11 +11,8 @@ services:
       dockerfile: Dockerfile.dev
     environment:
       - JWT_SECRET
-      - MONGO_AUTH_IP
-      - MONGO_AUTH_PORT
-      - MONGO_AUTH_USER
-      - MONGO_AUTH_PASS
-      - MONGO_AUTH_DB
+      - MONGO_URI
+      - MONGO_TEST_URI
     depends_on:
       - mongo
     ports:

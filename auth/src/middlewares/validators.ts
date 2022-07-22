@@ -2,7 +2,15 @@ import { RequestHandler } from 'express';
 import { body, validationResult } from 'express-validator';
 import { User } from '../models/user';
 
-export const emailValidator = body('email')
+export const validateRequest: RequestHandler = (req, res, next) => {
+  const requestErrors = validationResult(req);
+  if (!requestErrors.isEmpty()) {
+    return res.status(400).json({ error: true, message: 'Bad request' });
+  }
+  next();
+};
+
+export const signupEmailValidator = body('email')
   .trim()
   .escape()
   .isEmail()
@@ -14,6 +22,13 @@ export const emailValidator = body('email')
       return Promise.reject('Invalid email');
     }
   });
+
+export const loginEmailValidator = body('email')
+  .trim()
+  .escape()
+  .isEmail()
+  .normalizeEmail()
+  .withMessage('Invalid email');
 
 export const signupPasswordValidator = body('password')
   .trim()
@@ -36,17 +51,9 @@ export const nameValidator = body('name')
   .withMessage('Invalid username');
 
 export const signupValidators = [
-  emailValidator,
+  signupEmailValidator,
   signupPasswordValidator,
   nameValidator,
 ];
 
-export const loginValidators = [nameValidator, loginPasswordValidator];
-
-export const validateRequest: RequestHandler = (req, res, next) => {
-  const requestErrors = validationResult(req);
-  if (!requestErrors.isEmpty()) {
-    return res.status(400).json({ error: true, message: 'Bad request' });
-  }
-  next();
-};
+export const loginValidators = [loginEmailValidator, loginPasswordValidator];

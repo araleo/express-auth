@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install --location=global nodemon && npm install
+RUN npm install
 
 EXPOSE 3001
 
