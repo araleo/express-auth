@@ -1,46 +1,28 @@
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { jwtConfig } from '../config/config';
 import { User } from '../models/user';
 import { RequestHandler } from 'express';
-import { getOneHourAhead } from '../utils/lib';
-
-const getJwt = (email: string, id: string, status: string) => {
-  const secret = jwtConfig.jwtSecret;
-  if (!secret) {
-    return;
-  }
-  return jwt.sign({ email, id, status }, secret, { expiresIn: '1h' });
-};
+import { getCookieCfg, getJwt } from '../utils/lib';
+import { jwtConfig } from '../config/config';
 
 export const signup: RequestHandler = (req, res, next) => {
   const name = req.body.name;
   const email = req.body.email;
-  const password = req.body.password;
+  const pwd = req.body.password;
 
   bcrypt
-    .hash(password, 12)
-    .then((hashedPw) => {
-      const user = new User({
-        name: name,
-        email: email,
-        password: hashedPw,
-      });
+    .hash(pwd, 12)
+    .then((password) => {
+      const user = new User({ name, email, password });
       return user.save();
     })
     .then((result) => {
-      const token = getJwt(result.email, result._id.toString(), result.status);
-      res
-        .status(201)
-        .cookie('SESSIONID', token, {
-          secure: true,
-          expires: getOneHourAhead(),
-          httpOnly: true,
-        })
-        .json({
-          email: result.email,
-          userId: result._id.toString(),
-        });
+      const { email, _id, status } = result;
+      const token = getJwt(email, _id.toString(), status, jwtConfig.jwtSecret);
+      if (token === undefined) {
+        throw new Error('Internal server error');
+      }
+      const data = { email: result.email, userId: result._id.toString() };
+      res.status(201).cookie('SESSIONID', token, getCookieCfg()).json(data);
     })
     .catch((err) => next(err));
 };
@@ -60,18 +42,13 @@ export const login: RequestHandler = async (req, res, next) => {
       if (!isEqual) {
         return res.status(401).json({ error: 'Invalid credentials' });
       }
-      const token = getJwt(user.email, user._id.toString(), user.status);
-      res
-        .status(200)
-        .cookie('SESSIONID', token, {
-          secure: true,
-          expires: getOneHourAhead(),
-          httpOnly: true,
-        })
-        .json({
-          email: user.email,
-          userId: user._id.toString(),
-        });
+      const { email, _id, status } = user;
+      const token = getJwt(email, _id.toString(), status, jwtConfig.jwtSecret);
+      if (token === undefined) {
+        throw new Error('Internal server error');
+      }
+      const data = { email: user.email, userId: user._id.toString() };
+      res.status(200).cookie('SESSIONID', token, getCookieCfg()).json(data);
     })
     .catch((err) => next(err));
 };
