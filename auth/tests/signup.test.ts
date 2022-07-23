@@ -10,7 +10,7 @@ import {
   mockOkUser,
 } from './test-data';
 
-describe('main app tests', () => {
+describe('signup tests', () => {
   beforeAll(async () => {
     const mongoUri = process.env.MONGO_TEST_URI || '';
     await mongoose.connect(mongoUri);
@@ -36,6 +36,16 @@ describe('main app tests', () => {
     const keys = Array.from(Object.keys(body));
     expect(keys).toHaveLength(1);
     expect(keys[0]).toEqual('userId');
+  });
+
+  test('/auth/signup post response properly sets cookie', async () => {
+    const response = await request(app).post('/auth/signup').send(mockOkUser);
+    expect(response.statusCode).toBe(201);
+    const cookies = response.headers['set-cookie'][0]
+      .split(',')
+      .map((item: string) => item.split(';')[0]);
+    const cookie: string = cookies.join(';');
+    expect(cookie.startsWith('SESSIONID')).toBe(true);
   });
 
   test('/auth/signup post returns 400 on request with invalid name', async () => {

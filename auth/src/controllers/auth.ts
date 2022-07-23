@@ -19,7 +19,7 @@ export const signup: RequestHandler = (req, res, next) => {
       const { email, _id, status } = result;
       const token = getJwt(email, _id.toString(), status, jwtConfig.jwtSecret);
       if (token === undefined) {
-        throw new Error('Internal server error');
+        throw new Error();
       }
       const data = { userId: result._id.toString() };
       res.status(201).cookie('SESSIONID', token, getCookieCfg()).json(data);
@@ -33,19 +33,19 @@ export const login: RequestHandler = async (req, res, next) => {
 
   const user = await User.findOne({ email: email });
   if (user === null) {
-    return res.status(401).json({ error: 'Invalid credentials' });
+    return res.status(401).json({ errors: ['Invalid credentials'] });
   }
 
   bcrypt
     .compare(password, user.password)
     .then((isEqual) => {
       if (!isEqual) {
-        return res.status(401).json({ error: 'Invalid credentials' });
+        return res.status(401).json({ errors: ['Invalid credentials'] });
       }
       const { email, _id, status } = user;
       const token = getJwt(email, _id.toString(), status, jwtConfig.jwtSecret);
       if (token === undefined) {
-        throw new Error('Internal server error');
+        throw new Error();
       }
       res
         .status(200)

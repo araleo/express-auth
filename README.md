@@ -19,20 +19,21 @@ MONGO_AUTH_USER=<username>
 MONGO_AUTH_PASS=<password>
 ```
 
-## Quickstart
+## Development
 
 ```
-docker-compose up -d --build
+docker-compose -f docker-compose.dev.yml up -d --build
 docker exec -it auth_container npm run test
 ```
 
-App runs on port 3001.
+## Build
 
-## Production
-
-This is not a production ready auth service and needs some adjustments in order to become one. Those are being implemented at small paces.
+```
+docker-compose up -d --build
+```
 
 ## TODO
 
+- [ ] Authenticate jwt
 - [ ] MFA
 - [ ] Logout (blocklist)
