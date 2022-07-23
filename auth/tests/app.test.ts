@@ -16,4 +16,9 @@ describe('main app tests', () => {
     const response = await request(app).get('/');
     expect(response.statusCode).toBe(404);
   });
+
+  test('/auth returns 404', async () => {
+    const response = await request(app).get('/auth');
+    expect(response.statusCode).toBe(404);
+  });
 });

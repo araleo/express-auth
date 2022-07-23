@@ -21,7 +21,7 @@ export const signup: RequestHandler = (req, res, next) => {
       if (token === undefined) {
         throw new Error('Internal server error');
       }
-      const data = { email: result.email, userId: result._id.toString() };
+      const data = { userId: result._id.toString() };
       res.status(201).cookie('SESSIONID', token, getCookieCfg()).json(data);
     })
     .catch((err) => next(err));

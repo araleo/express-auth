@@ -2,10 +2,22 @@ import { RequestHandler } from 'express';
 import { body, validationResult } from 'express-validator';
 import { User } from '../models/user';
 
+interface ValidationError {
+  value: string;
+  msg: string;
+  param: string;
+  location: string;
+}
+
 export const validateRequest: RequestHandler = (req, res, next) => {
-  const requestErrors = validationResult(req);
-  if (!requestErrors.isEmpty()) {
-    return res.status(400).json({ error: true, message: 'Bad request' });
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    const messages: string[] = [];
+    const errors = result.array() as ValidationError[];
+    for (const error of errors) {
+      messages.push(error.msg);
+    }
+    return res.status(400).json({ errors: messages });
   }
   next();
 };
