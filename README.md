@@ -31,3 +31,8 @@ App runs on port 3001.
 ## Production
 
 This is not a production ready auth service and needs some adjustments in order to become one. Those are being implemented at small paces.
+
+## TODO
+
+- [ ] MFA
+- [ ] Logout (blocklist)
