@@ -1,8 +1,7 @@
 import bcrypt from 'bcryptjs';
 import { User } from '../models/user';
 import { RequestHandler } from 'express';
-import { getCookieCfg, getJwt } from '../utils/lib';
-import { jwtConfig } from '../config/config';
+import { getCookieCfg, getJwt, verifyJwt } from '../utils/lib';
 
 export const signup: RequestHandler = (req, res, next) => {
   const name = req.body.name;
@@ -17,7 +16,7 @@ export const signup: RequestHandler = (req, res, next) => {
     })
     .then((result) => {
       const { email, _id, status } = result;
-      const token = getJwt(email, _id.toString(), status, jwtConfig.jwtSecret);
+      const token = getJwt(email, _id.toString(), status);
       if (token === undefined) {
         throw new Error();
       }
@@ -43,7 +42,7 @@ export const login: RequestHandler = async (req, res, next) => {
         return res.status(401).json({ errors: ['Invalid credentials'] });
       }
       const { email, _id, status } = user;
-      const token = getJwt(email, _id.toString(), status, jwtConfig.jwtSecret);
+      const token = getJwt(email, _id.toString(), status);
       if (token === undefined) {
         throw new Error();
       }
@@ -53,4 +52,14 @@ export const login: RequestHandler = async (req, res, next) => {
         .json({ userId: user._id.toString() });
     })
     .catch((err) => next(err));
+};
+
+export const verify: RequestHandler = async (req, res, _) => {
+  const jwt = req.cookies.SESSIONID;
+
+  if (!verifyJwt(jwt)) {
+    return res.status(401).json({ errors: ['Invalid token'] });
+  }
+
+  res.status(200).json();
 };
